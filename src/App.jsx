@@ -1,7 +1,12 @@
+import * as React from 'react';
+
 const Search = () => {
+  const [searchTerm, setSearchTerm] = React.useState(' ');
+  console.log('Search renders');
   const handleChange = (event) => {
     console.log(event);
     console.log(event.target.value);
+    setSearchTerm(event.target.value);
   };
 
   return (
@@ -9,28 +14,31 @@ const Search = () => {
       <h1> My Hacker Stories </h1>
       <label htmlFor="Search"> Search : </label>
       <input id="search" type="text" onChange={handleChange} />
+      <p> Search Term: <strong>{searchTerm}</strong> </p>
     </div>
   );
 };
 
-const List = (props) => (
-  <ul>
-    {props.list.map((book) => (
-      <li key={book.objectID}>
-        <Item item={book} />
-      </li>
-    ))}
-  </ul>
-);
+const List = (props) => {
+  console.log('List renders');
+  return (
+    <ul>
+      {props.list.map((book) => (
+        <Item  key={book.objectID} item={book} />
+      ))}
+    </ul>
+  )
+}
 
 const Item = (props) => {
+  console.log('Item renders');
   return (
-    <div>
+    <li>
       <span>Title: {props.item.title}</span>
       <span>URL: {props.item.url}</span>
       <span>Author: {props.item.author}</span>
       <span>Points: {props.item.points}</span>
-    </div>
+    </li>
   );
 };
 
@@ -53,6 +61,7 @@ const App = () => {
       objectID: 1,
     },
   ];
+  console.log('App renders');
   return (
     <div>
       <Search />
