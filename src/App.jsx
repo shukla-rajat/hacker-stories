@@ -1,9 +1,11 @@
 import * as React from 'react';
 
-const Search = () => {
-  const [searchTerm, setSearchTerm] = React.useState(' ');
+const Search = (props) => {
   console.log('Search renders');
+  const [searchTerm, setSearchTerm] = React.useState(' ');
+  
   const handleChange = (event) => {
+    props.onSearch(event);
     console.log(event);
     console.log(event.target.value);
     setSearchTerm(event.target.value);
@@ -43,6 +45,10 @@ const Item = (props) => {
 };
 
 const App = () => {
+  console.log('App renders');
+  const handleSearch = (event) => {
+    console.log("callback handler", event.target.value);
+  }
   const stories = [
     {
       title: "React",
@@ -61,10 +67,10 @@ const App = () => {
       objectID: 1,
     },
   ];
-  console.log('App renders');
+  
   return (
     <div>
-      <Search />
+      <Search onSearch={handleSearch}/>
       <List list={stories} />
     </div>
   );
