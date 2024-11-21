@@ -1,28 +1,16 @@
 import * as React from 'react';
 
 const Search = (props) => {
-  console.log('Search renders');
-  const [searchTerm, setSearchTerm] = React.useState(' ');
-  
-  const handleChange = (event) => {
-    props.onSearch(event);
-    console.log(event);
-    console.log(event.target.value);
-    setSearchTerm(event.target.value);
-  };
-
   return (
     <div>
       <h1> My Hacker Stories </h1>
       <label htmlFor="Search"> Search : </label>
-      <input id="search" type="text" onChange={handleChange} />
-      <p> Search Term: <strong>{searchTerm}</strong> </p>
+      <input id="search" type="text" onChange={props.onSearch} />
     </div>
   );
 };
 
 const List = (props) => {
-  console.log('List renders');
   return (
     <ul>
       {props.list.map((book) => (
@@ -33,22 +21,17 @@ const List = (props) => {
 }
 
 const Item = (props) => {
-  console.log('Item renders');
   return (
     <li>
-      <span>Title: {props.item.title}</span>
-      <span>URL: {props.item.url}</span>
-      <span>Author: {props.item.author}</span>
-      <span>Points: {props.item.points}</span>
+      <span>Title: {props.item.title}</span><br/>
+      <span>URL: {props.item.url}</span><br/>
+      <span>Author: {props.item.author}</span><br/>
+      <span>Points: {props.item.points}</span><br/>
     </li>
   );
 };
 
 const App = () => {
-  console.log('App renders');
-  const handleSearch = (event) => {
-    console.log("callback handler", event.target.value);
-  }
   const stories = [
     {
       title: "React",
@@ -67,11 +50,19 @@ const App = () => {
       objectID: 1,
     },
   ];
-  
+
+  const [searchTerm, setSearchTerm] = React.useState(' ');
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  }
+
+  const searchedStories = stories.filter( story => story.title.includes(searchTerm));
+
   return (
     <div>
       <Search onSearch={handleSearch}/>
-      <List list={stories} />
+      <List list={searchedStories} />
     </div>
   );
 };
