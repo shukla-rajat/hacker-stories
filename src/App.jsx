@@ -13,8 +13,8 @@ const Search = ({ search, onSearch }) => {
 const List = ({ list }) => {
   return (
     <ul>
-      {list.map((book) => (
-        <Item key={book.objectID} {...book}/>
+      {list.map(({objectID, ...book}) => (
+        <Item key={objectID} {...book}/>
       ))}
     </ul>
   );
