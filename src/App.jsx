@@ -14,13 +14,13 @@ const List = ({ list }) => {
   return (
     <ul>
       {list.map((book) => (
-        <Item key={book.objectID} item={book} />
+        <Item key={book.objectID} title={book.title} url={book.url} author={ book.author} points={book.points}/>
       ))}
     </ul>
   );
 };
 
-const Item = ({ item: { title, url, author, points } }) => {
+const Item = ({ title, url, author, points }) => {
   return (
     <li>
       <span>Title: {title}</span>
