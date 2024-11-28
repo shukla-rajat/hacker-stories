@@ -14,7 +14,7 @@ const List = ({ list }) => {
   return (
     <ul>
       {list.map((book) => (
-        <Item key={book.objectID} title={book.title} url={book.url} author={ book.author} points={book.points}/>
+        <Item key={book.objectID} {...book}/>
       ))}
     </ul>
   );
