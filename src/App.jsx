@@ -13,23 +13,23 @@ const Search = ({ search, onSearch }) => {
 const List = ({ list }) => {
   return (
     <ul>
-      {list.map(({objectID, ...book}) => (
-        <Item key={objectID} {...book}/>
+      {list.map((book) => (
+        <Item key={book.objectID} item={book} />
       ))}
     </ul>
   );
 };
 
-const Item = ({ title, url, author, points }) => {
+const Item = ({ item }) => {
   return (
     <li>
-      <span>Title: {title}</span>
+      <span>Title: {item.title}</span>
       <br />
-      <span>URL: {url}</span>
+      <span>URL: {item.url}</span>
       <br />
-      <span>Author: {author}</span>
+      <span>Author: {item.author}</span>
       <br />
-      <span>Points: {points}</span>
+      <span>Points: {item.points}</span>
       <br />
     </li>
   );
