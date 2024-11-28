@@ -1,32 +1,36 @@
-import * as React from 'react';
+import * as React from "react";
 
-const Search = (props) => {
+const Search = ({ search, onSearch }) => {
   return (
     <div>
       <h1> My Hacker Stories </h1>
       <label htmlFor="Search"> Search : </label>
-      <input id="search" value={props.search} type="text" onChange={props.onSearch} />
+      <input id="search" value={search} type="text" onChange={onSearch} />
     </div>
   );
 };
 
-const List = (props) => {
+const List = ({ list }) => {
   return (
     <ul>
-      {props.list.map((book) => (
-        <Item  key={book.objectID} item={book} />
+      {list.map((book) => (
+        <Item key={book.objectID} item={book} />
       ))}
     </ul>
-  )
-}
+  );
+};
 
-const Item = (props) => {
+const Item = ({ item: { title, url, author, points } }) => {
   return (
     <li>
-      <span>Title: {props.item.title}</span><br/>
-      <span>URL: {props.item.url}</span><br/>
-      <span>Author: {props.item.author}</span><br/>
-      <span>Points: {props.item.points}</span><br/>
+      <span>Title: {title}</span>
+      <br />
+      <span>URL: {url}</span>
+      <br />
+      <span>Author: {author}</span>
+      <br />
+      <span>Points: {points}</span>
+      <br />
     </li>
   );
 };
@@ -51,17 +55,19 @@ const App = () => {
     },
   ];
 
-  const [searchTerm, setSearchTerm] = React.useState('React');
+  const [searchTerm, setSearchTerm] = React.useState("React");
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
-  }
+  };
 
-  const searchedStories = stories.filter( story => story.title.includes(searchTerm));
+  const searchedStories = stories.filter((story) =>
+    story.title.includes(searchTerm)
+  );
 
   return (
     <div>
-      <Search search={searchTerm} onSearch={handleSearch}/>
+      <Search search={searchTerm} onSearch={handleSearch} />
       <List list={searchedStories} />
     </div>
   );
