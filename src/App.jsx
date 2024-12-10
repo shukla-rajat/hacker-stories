@@ -36,13 +36,13 @@ const Item = ({ item }) => {
 };
 
 const useStorageState = (initialState) => {
-  const [searchTerm, setSearchTerm] = React.useState(localStorage.getItem("search") || initialState);
+  const [value, setValue] = React.useState(localStorage.getItem("value") || initialState);
   
   React.useEffect(() => {
-    localStorage.setItem("search", searchTerm);
-  }, [searchTerm]);
+    localStorage.setItem("value", value);
+  }, [value]);
   
-  return [searchTerm, setSearchTerm];
+  return [value, setValue];
 }
 
 const App = () => {
