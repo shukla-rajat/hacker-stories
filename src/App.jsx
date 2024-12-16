@@ -1,11 +1,21 @@
 import * as React from "react";
 
-const Search = ({ search, onSearch }) => {
+const useStorageState = (key, initialState) => {
+  const [value, setValue] = React.useState(localStorage.getItem(key) || initialState);
+  
+  React.useEffect(() => {
+    localStorage.setItem(key, value);
+  }, [value, key]);
+  
+  return [value, setValue];
+}
+
+const InputWithLabel = ({ id, type ='text', value, onInputChange, children }) => {
   return (
     <>
       <h1> My Hacker Stories </h1>
-      <label htmlFor="Search"> Search : </label>
-      <input id="search" value={search} type="text" onChange={onSearch} />
+      <label htmlFor={id}> {children} </label>
+      <input id={id} value={value} type={type} onChange={onInputChange} />
     </>
   );
 };
@@ -34,16 +44,6 @@ const Item = ({ item }) => {
     </li>
   );
 };
-
-const useStorageState = (key, initialState) => {
-  const [value, setValue] = React.useState(localStorage.getItem(key) || initialState);
-  
-  React.useEffect(() => {
-    localStorage.setItem(key, value);
-  }, [value, key]);
-  
-  return [value, setValue];
-}
 
 const App = () => {
   const stories = [
@@ -77,7 +77,7 @@ const App = () => {
 
   return (
     <div>
-      <Search search={searchTerm} onSearch={handleSearch} />
+      <InputWithLabel id='search' value={searchTerm} onInputChange={handleSearch}><strong>Search : </strong></InputWithLabel>
       <List list={searchedStories} />
     </div>
   );
