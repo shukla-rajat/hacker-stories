@@ -35,17 +35,22 @@ const InputWithLabel = ({
   );
 };
 
-const List = ({ list }) => {
+const List = ({ list, onRemoveItem }) => {
   return (
     <ul>
       {list.map((book) => (
-        <Item key={book.objectID} item={book} />
+        <Item key={book.objectID} item={book} onRemoveItem={onRemoveItem}/>
       ))}
     </ul>
   );
 };
 
-const Item = ({ item }) => {
+const Item = ({ item, onRemoveItem }) => {
+
+  const handleRemoveItem = () => {
+    onRemoveItem(item);
+  }
+
   return (
     <li>
       <span>Title: {item.title}</span>
@@ -56,12 +61,14 @@ const Item = ({ item }) => {
       <br />
       <span>Points: {item.points}</span>
       <br />
+      <span><button type="button" onClick={handleRemoveItem}> Dismiss </button></span>
+      <br />
     </li>
   );
 };
 
 const App = () => {
-  const stories = [
+  const initialStories = [
     {
       title: "React",
       url: "https://reactjs.org/",
@@ -81,6 +88,7 @@ const App = () => {
   ];
 
   const [searchTerm, setSearchTerm] = useStorageState('search','React');
+  const [stories, setStories] = React.useState(initialStories);
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -90,10 +98,15 @@ const App = () => {
     story.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleRemoveStories = (item) => {
+    const newStories = stories.filter((story) => story.objectID !== item.objectId);
+    setStories(newStories);
+  }
+
   return (
     <div>
       <InputWithLabel id='search' value={searchTerm} onInputChange={handleSearch}><strong>Search : </strong></InputWithLabel>
-      <List list={searchedStories} />
+      <List list={searchedStories} onRemoveItem={handleRemoveStories} />
     </div>
   );
 };
