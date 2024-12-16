@@ -46,11 +46,6 @@ const List = ({ list, onRemoveItem }) => {
 };
 
 const Item = ({ item, onRemoveItem }) => {
-
-  const handleRemoveItem = () => {
-    onRemoveItem(item);
-  }
-
   return (
     <li>
       <span>Title: {item.title}</span>
@@ -61,7 +56,7 @@ const Item = ({ item, onRemoveItem }) => {
       <br />
       <span>Points: {item.points}</span>
       <br />
-      <span><button type="button" onClick={handleRemoveItem}> Dismiss </button></span>
+      <span><button type="button" onClick={() => onRemoveItem(item)}> Dismiss </button></span>
       <br />
     </li>
   );
@@ -99,7 +94,7 @@ const App = () => {
   );
 
   const handleRemoveStories = (item) => {
-    const newStories = stories.filter((story) => story.objectID !== item.objectId);
+    const newStories = stories.filter((story) => story.objectID !== item.objectID);
     setStories(newStories);
   }
 
