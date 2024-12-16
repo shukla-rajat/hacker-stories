@@ -10,12 +10,19 @@ const useStorageState = (key, initialState) => {
   return [value, setValue];
 }
 
-const InputWithLabel = ({ id, type ='text', value, onInputChange, children }) => {
+const InputWithLabel = ({
+  id,
+  type = "text",
+  value,
+  onInputChange,
+  isFocused,
+  children,
+}) => {
   return (
     <>
       <h1> My Hacker Stories </h1>
       <label htmlFor={id}> {children} </label>
-      <input id={id} value={value} type={type} onChange={onInputChange} />
+      <input id={id} value={value} type={type} autoFocus={isFocused} onChange={onInputChange} />
     </>
   );
 };
