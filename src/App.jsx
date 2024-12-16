@@ -15,14 +15,22 @@ const InputWithLabel = ({
   type = "text",
   value,
   onInputChange,
-  isFocused,
+  isFocused = true,
   children,
 }) => {
+  const inputRef = React.useRef();
+
+  React.useEffect(() =>{
+    if (isFocused && inputRef.current){
+      inputRef.current.focus();
+    }
+  },[isFocused]);
+
   return (
     <>
       <h1> My Hacker Stories </h1>
       <label htmlFor={id}> {children} </label>
-      <input id={id} value={value} type={type} autoFocus={isFocused} onChange={onInputChange} />
+      <input id={id} value={value} type={type} ref={inputRef} onChange={onInputChange} />
     </>
   );
 };
