@@ -104,7 +104,7 @@ const App = () => {
       case 'SET_STORIES':
         return action.payload;
       case 'REMOVE_STORIES':
-        return stories.filter((story) => {
+        return state.filter((story) => {
           return story.objectID !== action.payload.objectID;
         })
       default:
