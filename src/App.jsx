@@ -136,22 +136,17 @@ const App = () => {
 
   const [stories, dispatchStories] = React.useReducer(storiesReducer, { data:[], isError: false, isLoading: false });
   const [searchTerm, setSearchTerm] = useStorageState("search", "React");
-  //const [isLoading, setIsLoading] = React.useState(false);
-  //const [isError, setIsError] = React.useState(false);
-  
+
   React.useEffect(() => {
-    //setIsLoading(true);
     dispatchStories({ type: "STORIES_FETCH_INIT" });
     getAsyncStories
       .then((result) => {
-        //setIsLoading(false);
         dispatchStories({
           type: "STORIES_FETCH_SUCCESS",
           payload: result.data.stories,
         });
       })
-      //.catch(() => setIsError(true));
-      .catch((error) => dispatchStories({ type: "STORIES_FETCH_FAILURE" }));
+      .catch(() => dispatchStories({ type: "STORIES_FETCH_FAILURE" }));
   }, []);
 
   const handleSearch = (event) => {
