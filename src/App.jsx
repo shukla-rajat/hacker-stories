@@ -97,8 +97,8 @@ const App = () => {
   ];
 
   const getAsyncStories = new Promise((resolve, reject) => {
-    //setTimeout(() => resolve({ data: { stories: initialStories } }), 2000);
-    setTimeout(() => reject(new Error('Failure: Something went wrong')), 2000);
+    setTimeout(() => resolve({ data: { stories: initialStories } }), 2000);
+    //setTimeout(() => reject(new Error('Failure: Something went wrong')), 2000);
   });
 
   const storiesReducer = (state, action) => {
