@@ -76,6 +76,7 @@ const Item = ({ item, onRemoveItem }) => {
   );
 };
 
+const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
 const App = () => {
   const initialStories = [
     {
@@ -96,10 +97,10 @@ const App = () => {
     },
   ];
 
-  const getAsyncStories = new Promise((resolve, reject) => {
+  /*const getAsyncStories = new Promise((resolve, reject) => {
     setTimeout(() => resolve({ data: { stories: initialStories } }), 2000);
     //setTimeout(() => reject(new Error('Failure: Something went wrong')), 2000);
-  });
+  });*/
 
   const storiesReducer = (state, action) => {
     switch(action.type){
@@ -138,15 +139,19 @@ const App = () => {
   const [searchTerm, setSearchTerm] = useStorageState("search", "React");
 
   React.useEffect(() => {
-    dispatchStories({ type: "STORIES_FETCH_INIT" });
-    getAsyncStories
+    dispatchStories({ type: 'STORIES_FETCH_INIT' });
+
+    fetch(`${API_ENDPOINT}react`)
+      .then((response) => response.json())
       .then((result) => {
         dispatchStories({
-          type: "STORIES_FETCH_SUCCESS",
-          payload: result.data.stories,
+          type: 'STORIES_FETCH_SUCCESS',
+          payload: result.hits,
         });
       })
-      .catch(() => dispatchStories({ type: "STORIES_FETCH_FAILURE" }));
+      .catch(() =>
+        dispatchStories({ type: 'STORIES_FETCH_FAILURE' })
+      );
   }, []);
 
   const handleSearch = (event) => {
