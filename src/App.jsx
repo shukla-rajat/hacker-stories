@@ -97,11 +97,6 @@ const App = () => {
     },
   ];
 
-  /*const getAsyncStories = new Promise((resolve, reject) => {
-    setTimeout(() => resolve({ data: { stories: initialStories } }), 2000);
-    //setTimeout(() => reject(new Error('Failure: Something went wrong')), 2000);
-  });*/
-
   const storiesReducer = (state, action) => {
     switch(action.type){
       case 'STORIES_FETCH_INIT':
@@ -139,9 +134,10 @@ const App = () => {
   const [searchTerm, setSearchTerm] = useStorageState("search", "React");
 
   React.useEffect(() => {
+    if (!searchTerm) return; 
     dispatchStories({ type: 'STORIES_FETCH_INIT' });
 
-    fetch(`${API_ENDPOINT}react`)
+    fetch(`${API_ENDPOINT}${searchTerm}`)
       .then((response) => response.json())
       .then((result) => {
         dispatchStories({
@@ -152,15 +148,15 @@ const App = () => {
       .catch(() =>
         dispatchStories({ type: 'STORIES_FETCH_FAILURE' })
       );
-  }, []);
+  }, [searchTerm]);
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const searchedStories = stories.data.filter((story) =>
+  /*const searchedStories = stories.data.filter((story) =>
     story.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  );*/
 
   const handleRemoveStories = (item) => {
     dispatchStories({
@@ -182,7 +178,7 @@ const App = () => {
       { stories.isLoading ? (
         <p>Loading...</p>
       ) : (
-        <List list={searchedStories} onRemoveItem={handleRemoveStories} />
+        <List list={stories.data} onRemoveItem={handleRemoveStories} />
       )}
     </div>
   );
