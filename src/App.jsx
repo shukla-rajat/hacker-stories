@@ -50,15 +50,15 @@ const InputWithLabel = ({
   );
 };
 
-const List = ({ list, onRemoveItem }) => {
-  return (
+const List = React.memo(({ list, onRemoveItem }) => {
+  console.log("B:List") || (
     <ul>
       {list.map((book) => (
         <Item key={book.objectID} item={book} onRemoveItem={onRemoveItem} />
       ))}
     </ul>
   );
-};
+});
 
 const Item = ({ item, onRemoveItem }) => {
   return (
@@ -173,13 +173,14 @@ const App = () => {
     event.preventDefault();
   };
 
-  const handleRemoveStories = (item) => {
+  const handleRemoveStories = React.useCallback((item) => {
     dispatchStories({
       type: "REMOVE_STORIES",
       payload: item,
     });
-  };
+  }, []);
 
+  console.log("B:App")
   return (
     <div>
       <SearchForm
