@@ -8,10 +8,10 @@ const useStorageState = (key, initialState) => {
   );
 
   React.useEffect(() => {
-    if(!isMounted.current){
+    if (!isMounted.current) {
       isMounted.current = true;
     } else {
-      console.log('A');
+      console.log("A");
       localStorage.setItem(key, value);
     }
   }, [value, key]);
@@ -51,7 +51,7 @@ const InputWithLabel = ({
 };
 
 const List = React.memo(({ list, onRemoveItem }) => {
-  console.log("B:List") || (
+  return console.log("B:List") || (
     <ul>
       {list.map((book) => (
         <Item key={book.objectID} item={book} onRemoveItem={onRemoveItem} />
@@ -98,6 +98,13 @@ const SearchForm = ({ searchTerm, onSearchInput, onSearchSubmit }) => (
     </button>
   </form>
 );
+
+const getSumComments = (stories) => {
+  console.log('C');
+  return stories.data.reduce((result, value) => {
+    return result = result + value.num_comments;
+  }, 0);
+};
 
 const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
 
@@ -159,7 +166,7 @@ const App = () => {
   }, [url]);
 
   React.useEffect(() => {
-    console.log("How many times do I log?")
+    console.log("How many times do I log?");
     handleFetchStories();
   }, [handleFetchStories]);
 
@@ -180,9 +187,13 @@ const App = () => {
     });
   }, []);
 
-  console.log("B:App")
+  console.log("B:App");
+
+  const sumComments = React.useMemo(() => getSumComments(stories), [stories]);
+  
   return (
     <div>
+      <h1>My Hacker Stories with {sumComments} comments. </h1>
       <SearchForm
         searchTerm={searchTerm}
         onSearchInput={handleSearchInput}
