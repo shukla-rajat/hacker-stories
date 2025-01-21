@@ -21,21 +21,28 @@ type ListProps = {
 
 type StoriesState = {
   data: Story[];
-  isLoading: boolean;
   isError: boolean;
+  isLoading: boolean;
 }
 
-type StoriesAction = {
-  type: string;
-  payload: any;
+type StoriesFetchInitAction = {
+  type: 'STORIES_FETCH_INIT'
+};
+
+type StoriesFetchSuccessAction = {
+  type: 'STORIES_FETCH_SUCCESS'
 }
 
-type StoriesReducer = {
-  state: StoriesState;
-  action: StoriesAction;
-} => {
-  
+type StoriesFetchFailureAction = {
+  type: 'STORIES_FETCH_FAILURE'
 }
+
+type StoriesRemoveAction = {
+  type: 'REMOVE_STORY';
+  story: Story;
+}
+
+type StoriesAction = StoriesFetchInitAction | StoriesFetchSuccessAction | StoriesFetchFailureAction | StoriesRemoveAction;
 
 const useStorageState = (key: string, initialState: string) => {
   const [value, setValue] = React.useState(
@@ -136,7 +143,7 @@ const App = () => {
 
   const [url, setUrl] = React.useState(`${API_ENDPOINT}${searchTerm}`);
 
-  const storiesReducer = (state, action) => {
+  const storiesReducer = (state: StoriesState, action: StoriesAction) => {
     switch (action.type) {
       case "STORIES_FETCH_INIT":
         return {
