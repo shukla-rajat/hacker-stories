@@ -1,7 +1,43 @@
 import * as React from "react";
 import axios from "axios";
 
-const useStorageState = (key: string, initialState: string) : [string, (newValue:string) => void] => {
+type Story =  {
+  objectID: string,
+  title: string,
+  url: string,
+  author: string,
+  points: number
+};
+
+type ItemProps = {
+  item: Story;
+  onRemoveItem: (item: Story) => void;
+}
+
+type ListProps = {
+  list: Story[];
+  onRemoveItem: (item:Story) =>void;
+}
+
+type StoriesState = {
+  data: Story[];
+  isLoading: boolean;
+  isError: boolean;
+}
+
+type StoriesAction = {
+  type: string;
+  payload: any;
+}
+
+type StoriesReducer = {
+  state: StoriesState;
+  action: StoriesAction;
+} => {
+  
+}
+
+const useStorageState = (key: string, initialState: string) => {
   const [value, setValue] = React.useState(
     localStorage.getItem(key) || initialState
   );
@@ -10,7 +46,7 @@ const useStorageState = (key: string, initialState: string) : [string, (newValue
     localStorage.setItem(key, value);
   }, [value, key]);
 
-  return [value, setValue];
+  return [value, setValue] as const;
 };
 
 const InputWithLabel = ({
@@ -44,7 +80,7 @@ const InputWithLabel = ({
   );
 };
 
-const List = ({ list, onRemoveItem }) => {
+const List = ({ list, onRemoveItem }: ListProps) => {
   return (
     <ul>
       {list.map((book) => (
@@ -54,7 +90,7 @@ const List = ({ list, onRemoveItem }) => {
   );
 };
 
-const Item = ({ item, onRemoveItem }) => {
+const Item = ({ item, onRemoveItem }: ItemProps) => {
   return (
     <li>
       <span>Title: {item.title}</span>
@@ -166,7 +202,7 @@ const App = () => {
     event.preventDefault();
   };
 
-  const handleRemoveStories = (item) => {
+  const handleRemoveStories = (item: Story) => {
     dispatchStories({
       type: "REMOVE_STORIES",
       payload: item,
