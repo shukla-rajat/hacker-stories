@@ -30,7 +30,8 @@ type StoriesFetchInitAction = {
 };
 
 type StoriesFetchSuccessAction = {
-  type: 'STORIES_FETCH_SUCCESS'
+  type: 'STORIES_FETCH_SUCCESS';
+  payload: Story[];
 }
 
 type StoriesFetchFailureAction = {
@@ -38,11 +39,26 @@ type StoriesFetchFailureAction = {
 }
 
 type StoriesRemoveAction = {
-  type: 'REMOVE_STORY';
+  type: 'REMOVE_STORIES';
   story: Story;
 }
 
 type StoriesAction = StoriesFetchInitAction | StoriesFetchSuccessAction | StoriesFetchFailureAction | StoriesRemoveAction;
+
+type SearchFormProps = {
+  searchTerm: string;
+  onSearchInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onSearchSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+};
+
+type InputWithLabelProps = {
+  id: string;
+  value: string;
+  type?: string;
+  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  isFocused?: boolean;
+  children: React.ReactNode;
+};
 
 const useStorageState = (key: string, initialState: string) => {
   const [value, setValue] = React.useState(
@@ -63,8 +79,8 @@ const InputWithLabel = ({
   onInputChange,
   isFocused = true,
   children,
-}) => {
-  const inputRef = React.useRef();
+}: InputWithLabelProps) => {
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
     if (isFocused && inputRef.current) {
@@ -120,7 +136,7 @@ const Item = ({ item, onRemoveItem }: ItemProps) => {
   );
 };
 
-const SearchForm = ({ searchTerm, onSearchInput, onSearchSubmit }) => (
+const SearchForm = ({ searchTerm, onSearchInput, onSearchSubmit } : SearchFormProps) => (
   <form onSubmit={onSearchSubmit}>
     <InputWithLabel
       id="search"
@@ -199,11 +215,11 @@ const App = () => {
     handleFetchStories();
   }, [handleFetchStories]);
 
-  const handleSearchInput = (event) => {
+  const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
-  const handleSearchSubmit = (event) => {
+  const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     setUrl(`${API_ENDPOINT}${searchTerm}`);
 
     event.preventDefault();
