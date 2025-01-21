@@ -1,7 +1,7 @@
 import * as React from "react";
 import axios from "axios";
 
-const useStorageState = (key, initialState) => {
+const useStorageState = (key: string, initialState: string) : [string, (newValue:string) => void] => {
   const [value, setValue] = React.useState(
     localStorage.getItem(key) || initialState
   );
