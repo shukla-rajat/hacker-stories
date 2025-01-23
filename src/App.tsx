@@ -39,8 +39,8 @@ type StoriesFetchFailureAction = {
 }
 
 type StoriesRemoveAction = {
-  type: 'REMOVE_STORIES';
-  story: Story;
+  type: 'REMOVE_STORY';
+  payload: Story;
 }
 
 type StoriesAction = StoriesFetchInitAction | StoriesFetchSuccessAction | StoriesFetchFailureAction | StoriesRemoveAction;
@@ -180,7 +180,7 @@ const App = () => {
           isError: true,
           isLoading: false,
         };
-      case "REMOVE_STORIES":
+      case "REMOVE_STORY":
         return {
           ...state,
           data: state.data.filter((story) => {
@@ -227,7 +227,7 @@ const App = () => {
 
   const handleRemoveStories = (item: Story) => {
     dispatchStories({
-      type: "REMOVE_STORIES",
+      type: "REMOVE_STORY",
       payload: item,
     });
   };
