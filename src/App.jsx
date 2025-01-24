@@ -1,100 +1,6 @@
 import * as React from "react";
 import axios from "axios";
 
-const useStorageState = (key, initialState) => {
-  const [value, setValue] = React.useState(
-    localStorage.getItem(key) || initialState
-  );
-
-  React.useEffect(() => {
-    localStorage.setItem(key, value);
-  }, [value, key]);
-
-  return [value, setValue];
-};
-
-const InputWithLabel = ({
-  id,
-  type = "text",
-  value,
-  onInputChange,
-  isFocused = true,
-  children,
-}) => {
-  const inputRef = React.useRef();
-
-  React.useEffect(() => {
-    if (isFocused && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [isFocused]);
-
-  return (
-    <>
-      <h1> My Hacker Stories </h1>
-      <label htmlFor={id}> {children} </label>
-      <input
-        id={id}
-        value={value}
-        type={type}
-        ref={inputRef}
-        onChange={onInputChange}
-      />
-    </>
-  );
-};
-
-const List = ({ list, onRemoveItem }) => {
-  return (
-    <ul>
-      {list.map((book) => (
-        <Item key={book.objectID} item={book} onRemoveItem={onRemoveItem} />
-      ))}
-    </ul>
-  );
-};
-
-const Item = ({ item, onRemoveItem }) => {
-  return (
-    <li>
-      <span>Title: {item.title}</span>
-      <br />
-      <span>URL: {item.url}</span>
-      <br />
-      <span>Author: {item.author}</span>
-      <br />
-      <span>Points: {item.points}</span>
-      <br />
-      <span>
-        <button type="button" onClick={() => onRemoveItem(item)}>
-          {" "}
-          Dismiss{" "}
-        </button>
-      </span>
-      <br />
-      <br />
-    </li>
-  );
-};
-
-const SearchForm = ({ searchTerm, onSearchInput, onSearchSubmit }) => (
-  <form onSubmit={onSearchSubmit}>
-    <InputWithLabel
-      id="search"
-      value={searchTerm}
-      onInputChange={onSearchInput}
-    >
-      <strong>Search : </strong>
-    </InputWithLabel>
-    <button type="button" disabled={!searchTerm}>
-      {" "}
-      Submit{" "}
-    </button>
-  </form>
-);
-
-const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
-
 const App = () => {
   const [searchTerm, setSearchTerm] = useStorageState("search", "React");
 
@@ -187,6 +93,100 @@ const App = () => {
         <List list={stories.data} onRemoveItem={handleRemoveStories} />
       )}
     </div>
+  );
+};
+
+const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
+
+const useStorageState = (key, initialState) => {
+  const [value, setValue] = React.useState(
+    localStorage.getItem(key) || initialState
+  );
+
+  React.useEffect(() => {
+    localStorage.setItem(key, value);
+  }, [value, key]);
+
+  return [value, setValue];
+};
+
+const SearchForm = ({ searchTerm, onSearchInput, onSearchSubmit }) => (
+  <form onSubmit={onSearchSubmit}>
+    <InputWithLabel
+      id="search"
+      value={searchTerm}
+      onInputChange={onSearchInput}
+    >
+      <strong>Search : </strong>
+    </InputWithLabel>
+    <button type="button" disabled={!searchTerm}>
+      {" "}
+      Submit{" "}
+    </button>
+  </form>
+);
+
+const InputWithLabel = ({
+  id,
+  type = "text",
+  value,
+  onInputChange,
+  isFocused = true,
+  children,
+}) => {
+  const inputRef = React.useRef();
+
+  React.useEffect(() => {
+    if (isFocused && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isFocused]);
+
+  return (
+    <>
+      <h1> My Hacker Stories </h1>
+      <label htmlFor={id}> {children} </label>
+      <input
+        id={id}
+        value={value}
+        type={type}
+        ref={inputRef}
+        onChange={onInputChange}
+      />
+    </>
+  );
+};
+
+const List = ({ list, onRemoveItem }) => {
+  return (
+    <ul>
+      {list.map((book) => (
+        <Item key={book.objectID} item={book} onRemoveItem={onRemoveItem} />
+      ))}
+    </ul>
+  );
+};
+
+const Item = ({ item, onRemoveItem }) => {
+  return (
+    <li>
+      <span>Title: {item.title}</span>
+      <br />
+      <span>URL: {item.url}</span>
+      <br />
+      <span>Author: {item.author}</span>
+      <br />
+      <span>Points: {item.points}</span>
+      <br />
+      <span>
+        <button type="button" onClick={() => onRemoveItem(item)}>
+          {" "}
+          Dismiss{" "}
+        </button>
+      </span>
+      <br />
+      <br />
+    </li>
   );
 };
 
