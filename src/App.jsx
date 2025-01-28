@@ -1,5 +1,6 @@
 import * as React from "react";
 import axios from "axios";
+import { sortBy } from 'lodash';
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useStorageState("search", "React");
@@ -157,12 +158,23 @@ const InputWithLabel = ({
   );
 };
 
+const SORTS = {
+  NONE: (list) => list,
+  TITLE: (list) => sortBy(list, 'title'),
+  AUTHOR: (list) => sortBy(list, 'author'),
+  COMMENT: (list) => sortBy(list, 'num_comments').reverse(),
+  POINT: (list) => sortBy(list, 'points').reverse(),
+};
+
 const List = ({ list, onRemoveItem }) => {
   const [sort, setSort] = React.useState("NONE");
 
   const handleSort = (sortKey) => {
     setSort(sortKey);
   };
+
+  const sortFunction = SORTS[sort];
+  const sortedList = sortFunction(list);
 
   return (
     <ul>
@@ -189,7 +201,7 @@ const List = ({ list, onRemoveItem }) => {
         </span>
         <span style={{ width: "10%" }}> Actions </span>
       </li>
-      {list.map((book) => (
+      {sortedList.map((book) => (
         <Item key={book.objectID} item={book} onRemoveItem={onRemoveItem} />
       ))}
     </ul>
