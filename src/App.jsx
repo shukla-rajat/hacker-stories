@@ -2,6 +2,30 @@ import * as React from "react";
 import axios from "axios";
 import { sortBy } from 'lodash';
 
+const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
+const getLastSearches = (urls) =>
+  urls
+    .reduce((result, url, index) => {
+      const searchTerm = extractSearchTerm(url);
+
+      if (index === 0) {
+        return result.concat(searchTerm);
+      }
+
+      const previousSearchTerm = result[result.length - 1];
+
+      if (previousSearchTerm === searchTerm) {
+        return result;
+      } else {
+        return result.concat(searchTerm);
+      }
+    }, [])
+    .slice(-6)
+    .slice(0, -1)
+    .map((url) => extractSearchTerm(url));
+const extractSearchTerm  = (url) => url.replace(API_ENDPOINT,'');
+const getUrl = (searchTerm) => `${API_ENDPOINT}${searchTerm}`;
+
 const useStorageState = (key, initialState) => {
   const [value, setValue] = React.useState(
     localStorage.getItem(key) || initialState
@@ -46,30 +70,6 @@ const storiesReducer = (state, action) => {
       throw new Error();
   }
 };
-
-const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
-const getLastSearches = (urls) =>
-  urls
-    .reduce((result, url, index) => {
-      const searchTerm = extractSearchTerm(url);
-
-      if (index === 0) {
-        return result.concat(searchTerm);
-      }
-
-      const previousSearchTerm = result[result.length - 1];
-
-      if (previousSearchTerm === searchTerm) {
-        return result;
-      } else {
-        return result.concat(searchTerm);
-      }
-    }, [])
-    .slice(-6)
-    .slice(0, -1)
-    .map((url) => extractSearchTerm(url));
-const extractSearchTerm  = (url) => url.replace(API_ENDPOINT,'');
-const getUrl = (searchTerm) => `${API_ENDPOINT}${searchTerm}`;
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useStorageState("search", "React");
@@ -136,13 +136,7 @@ const App = () => {
         onSearchInput={handleSearchInput}
         onSearchSubmit={handleSearchSubmit}
       ></SearchForm>
-      {
-        lastSearches.map((searchTerm, index) => (
-          <button type='button' id={searchTerm + index} onClick={() => handleLastSearch(searchTerm)}>
-            {searchTerm}
-          </button>
-        ))
-      }
+      <LastSearches lastSearches={lastSearches} onLastSearch={handleLastSearch} />
       {stories.isError && <p> Something went wrong </p>}
       {stories.isLoading ? (
         <p>Loading...</p>
@@ -152,6 +146,20 @@ const App = () => {
     </div>
   );
 };
+
+const LastSearches = ({ lastSearches, onLastSearch }) => (
+  <>
+    {lastSearches.map((searchTerm, index) => (
+      <button
+        type="button"
+        id={searchTerm + index}
+        onClick={() => onLastSearch(searchTerm)}
+      >
+        {searchTerm}
+      </button>
+    ))}
+  </>
+);
 
 const SearchForm = ({ searchTerm, onSearchInput, onSearchSubmit }) => (
   <form onSubmit={onSearchSubmit}>
