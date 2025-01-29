@@ -48,13 +48,33 @@ const storiesReducer = (state, action) => {
 };
 
 const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
+const getLastSearches = (urls) =>
+  urls
+    .reduce((result, url, index) => {
+      const searchTerm = extractSearchTerm(url);
+
+      if (index === 0) {
+        return result.concat(searchTerm);
+      }
+
+      const previousSearchTerm = result[result.length - 1];
+
+      if (previousSearchTerm === searchTerm) {
+        return result;
+      } else {
+        return result.concat(searchTerm);
+      }
+    }, [])
+    .slice(-6)
+    .slice(0, -1)
+    .map((url) => extractSearchTerm(url));
 const extractSearchTerm  = (url) => url.replace(API_ENDPOINT,'');
-const getLastSearches = (urls) => urls.slice(-5).map((url) => extractSearchTerm(url));
+const getUrl = (searchTerm) => `${API_ENDPOINT}${searchTerm}`;
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useStorageState("search", "React");
 
-  const [urls, setUrls] = React.useState([`${API_ENDPOINT}${searchTerm}`]);
+  const [urls, setUrls] = React.useState([getUrl(searchTerm)]);
   const lastSearches = getLastSearches(urls);
 
   const [stories, dispatchStories] = React.useReducer(storiesReducer, {
@@ -86,13 +106,6 @@ const App = () => {
     setSearchTerm(event.target.value);
   };
 
-  const handleSearchSubmit = (event) => {
-    const url = `${API_ENDPOINT}${searchTerm}`;
-    setUrls(urls.concat(url));
-
-    event.preventDefault();
-  };
-
   const handleRemoveStories = (item) => {
     dispatchStories({
       type: "REMOVE_STORIES",
@@ -100,8 +113,20 @@ const App = () => {
     });
   };
 
-  const handleLastSearch = () => {
-    
+  const handleSearch = (searchTerm) => {
+    const url = getUrl(searchTerm);
+    setUrls(urls.concat(url));
+  }
+
+  const handleSearchSubmit = (event) => {
+    handleSearch(searchTerm);
+
+    event.preventDefault();
+  };
+
+  const handleLastSearch = (searchTerm) => {
+    setSearchTerm(searchTerm);
+    handleSearch(searchTerm);
   }
 
   return (
@@ -112,9 +137,9 @@ const App = () => {
         onSearchSubmit={handleSearchSubmit}
       ></SearchForm>
       {
-        lastSearches.map((url) => (
-          <button type='button' id={url} onClick={() => handleLastSearch(url)}>
-            {url}
+        lastSearches.map((searchTerm, index) => (
+          <button type='button' id={searchTerm + index} onClick={() => handleLastSearch(searchTerm)}>
+            {searchTerm}
           </button>
         ))
       }
